@@ -23,21 +23,29 @@ echo "npm:     $(npm -v)"
 echo "Project: $ROOT_DIR"
 
 install_in_dir() {
-  local dir="$1"
-  local label="$2"
+    local dir="$1"
+    local label="$2"
 
- if [ -f package.json ]; then
-    echo "Installing root dependencies..."
-
-    if [ -f package-lock.json ]; then
-        if ! npm ci; then
-            echo "Lock file is out of sync. Retrying with npm install..."
-            npm install || exit 1
-        fi
-    else
-        npm install || exit 1
+    if [[ ! -f "$dir/package.json" ]]; then
+        echo "Skipping $label: package.json not found."
+        return 0
     fi
-fi
+
+    echo ""
+    echo "Installing $label dependencies..."
+
+    (
+        cd "$dir"
+
+        if [[ -f package-lock.json ]]; then
+            if ! npm ci; then
+                echo "npm ci failed. Retrying with npm install..."
+                npm install
+            fi
+        else
+            npm install
+        fi
+    )
 }
 
 # Install root project dependencies when the repository itself is an npm project.

@@ -1,178 +1,295 @@
 # Task Management
 
-React + Vite frontend with a Node.js + Express backend.
+A task management application built with **React, Vite, Node.js, Express.js, and Supabase**.
 
-## Quick start
+## 1. System Requirements
+
+Ensure the following software is installed before setting up the application.
+
+| Requirement | Purpose |
+|---|---|
+| Ubuntu/Linux | Development environment |
+| Node.js | JavaScript runtime |
+| npm | Package and dependency management |
+| Git | Repository cloning |
+| Supabase | Database and backend services |
+| Internet connection | Dependency installation and database connectivity |
+
+**Node.js:** Use a version compatible with your installed Vite version. Recent Vite releases may require Node.js 20.19+ or 22.12+.
+
+## 2. Installation
+
+### Step 1: Clone the repository
 
 ```bash
 git clone https://github.com/15-renjIth/task_management.git
 cd task_management
 ```
 
-Install Node.js and npm first. On Ubuntu, NVM is recommended:
+### Step 2: Install Node.js and npm
+
+For Ubuntu, NVM (Node Version Manager) is recommended.
+
+Install the required packages:
 
 ```bash
 sudo apt update
 sudo apt install -y curl git build-essential
+```
+
+Install NVM:
+
+```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.8/install.sh | bash
+```
+
+Reload the terminal configuration:
+
+```bash
 source ~/.bashrc
+```
+
+Install Node.js LTS:
+
+```bash
 nvm install --lts
 nvm alias default 'lts/*'
 nvm use default
+```
+
+Verify the installation:
+
+```bash
 node -v
 npm -v
 ```
 
-## Shell scripts
+### Step 3: Make the shell scripts executable
 
-Run these commands from the repository root.
+Run the following command from the project root:
+
+```bash
+chmod +x script.sh manage.sh build.sh
+```
+
+Ensure all three scripts exist before running this command.
+
+## 3. Shell Scripts
+
+Run all commands from the project root directory.
 
 | Script | Purpose | Command |
 |---|---|---|
-| `script.sh` | Installs dependencies for the root app and configured subprojects. | `./script.sh` |
-| `dev.sh` | Starts frontend and backend together for development. | `./dev.sh` |
-| `build.sh` | Installs dependencies and builds configured apps. | `./build.sh` |
+| `script.sh` | Installs frontend and backend dependencies. | `./script.sh` |
+| `manage.sh` | Manages application tasks, including development server startup. | `./manage.sh dev` |
+| `build.sh` | Installs dependencies and builds the configured applications. | `./build.sh` |
 
-Make scripts executable after cloning:
+### Install dependencies
 
-```bash
-chmod +x script.sh dev.sh build.sh
-```
-
-If a script is not present in the repository, skip it or add it before running the command.
-
-### Install dependencies — `script.sh`
+Run:
 
 ```bash
 ./script.sh
 ```
 
-The helper should install dependencies from the root `package.json` and, if configured, `backend/package.json`. It prefers `npm ci` when a lock file is present and falls back to `npm install` if the lock file is out of sync.
+The installation script should install dependencies from the root `package.json` and `backend/package.json`.
 
-Manual alternative:
+Alternatively, install dependencies manually:
 
 ```bash
 npm install
 npm --prefix backend install
 ```
 
-### Run development — `dev.sh`
+### Start development servers
+
+Run:
 
 ```bash
-./dev.sh
+./manage.sh dev
 ```
 
-Expected setup:
-- Root `package.json` defines a `dev` script, usually `vite`.
-- `backend/package.json` defines a `dev` script, usually `nodemon src/server.js`.
-- The `backend/` directory exists.
+The command should start the frontend and backend development servers according to the configuration in `manage.sh`.
 
-Typical local URLs (use the addresses printed in the terminal):
-- Frontend: `http://localhost:5173`
-- Backend: `http://localhost:5000`
+Typical local development URLs:
 
-Stop both services with `Ctrl+C`.
+| Application | URL |
+|---|---|
+| Frontend | http://localhost:5173 |
+| Backend | http://localhost:5000 |
 
-Run separately if needed:
+The actual URLs depend on the application configuration.
 
-```bash
-npm run dev
-npm --prefix backend run dev
-```
+Press `Ctrl+C` to stop the development processes.
 
-### Build — `build.sh`
+### Available management commands
+
+The following commands are examples of possible `manage.sh` operations. Use only the commands implemented in your actual script.
+
+| Command | Purpose |
+|---|---|
+| `./manage.sh dev` | Start frontend and backend development servers |
+| `./manage.sh install` | Install dependencies |
+| `./manage.sh build` | Build configured applications |
+| `./manage.sh build-frontend` | Build the frontend |
+| `./manage.sh build-backend` | Build or validate the backend |
+| `./manage.sh frontend` | Start the frontend separately |
+| `./manage.sh backend` | Start the backend separately |
+| `./manage.sh preview` | Preview the frontend production build |
+| `./manage.sh help` | Display available commands |
+
+### Build the application
+
+Run:
 
 ```bash
 ./build.sh
 ```
 
-The helper installs dependencies and runs the root `build` script if present. It also runs a backend build only if `backend/package.json` defines one.
+The build script should install dependencies and execute the configured build commands.
 
-Manual frontend build and preview:
+To build the frontend manually:
 
 ```bash
 npm run build
+```
+
+To preview the production frontend:
+
+```bash
 npm run preview
 ```
 
-Vite output is usually generated in `dist/`. Plain JavaScript Express apps generally do not need a separate build step; TypeScript backends usually do.
+Vite normally generates the production files in the `dist/` directory.
 
-## Expected project structure
+A plain JavaScript Express backend generally does not require compilation. A TypeScript backend typically needs a separate build step.
 
-Adjust this to match the actual repository:
+## 4. Expected Project Structure
 
 ```text
 task_management/
-├── src/                    # React frontend
-├── public/                 # Public assets, if present
+├── src/                        # React frontend
+│   ├── api/
+│   │   └── tasks.js
+│   ├── App.jsx
+│   └── main.jsx
+├── public/                     # Static assets, if present
 ├── backend/
-│   ├── src/server.js       # Example Express entry point
+│   ├── src/
+│   │   ├── lib/
+│   │   │   └── supabase.js
+│   │   ├── routes/
+│   │   │   └── tasks.js
+│   │   └── server.js
+│   ├── .env
 │   ├── package.json
 │   └── package-lock.json
 ├── package.json
 ├── package-lock.json
 ├── script.sh
-├── dev.sh
+├── manage.sh
 ├── build.sh
-├── .env.example            # Optional template
+├── .env
+├── .env.example
+├── .gitignore
 └── README.md
 ```
 
-## Environment variables
+This is an example structure. Adjust it to match the actual repository.
 
-Create local `.env` files only when required by your code. Example backend setting:
+## 5. Environment Configuration
+
+Configure environment variables according to the requirements of your application.
+
+### Frontend environment
+
+Create a `.env` file in the project root:
+
+```dotenv
+VITE_API_URL=http://localhost:5000
+```
+
+The frontend can use this variable to communicate with the Express backend.
+
+### Backend environment
+
+Create a `.env` file inside the `backend/` directory:
 
 ```dotenv
 PORT=5000
+FRONTEND_URL=http://localhost:5173
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your-secret-key
 ```
 
-For Supabase, use the variable names expected by your application. Never commit real `.env` files, passwords, API keys, or Supabase service-role keys. Vite variables prefixed with `VITE_` are exposed in browser code and must not contain secrets.
+Replace the example values with your actual configuration.
 
-## Git workflow
+**Security requirements:**
 
-Commit `package.json` and `package-lock.json` together for each Node.js app (root and backend). Do not commit `node_modules/`, generated `dist/` output unless your deployment workflow requires it, or local secrets.
+- Never commit real `.env` files containing secrets.
+- Never expose a Supabase service-role key in frontend code.
+- Keep private API keys and credentials on the backend.
+- Use the environment variable names expected by your application.
+- Ensure environment variables are loaded before the application initializes its Supabase client.
+
+## 6. Troubleshooting
+
+### Node.js version incompatibility
+
+Check the installed version:
 
 ```bash
-git status
-git add README.md script.sh dev.sh build.sh package.json package-lock.json
-# If backend files exist:
-git add backend/package.json backend/package-lock.json
-git commit -m "Document setup scripts and workflow"
-git push
+node -v
 ```
 
-Only stage files that exist and that you intend to commit.
+Install a compatible version using NVM if required.
 
-## Troubleshooting
+### Shell script permission denied
 
-### `npm ci` reports that the lock file is out of sync
+Run:
 
 ```bash
-npm install
-git status
+chmod +x script.sh manage.sh build.sh
 ```
 
-Review and commit the updated lock file with its matching `package.json`.
+### Shell script syntax errors
 
-### `Missing script: dev` or `Missing script: build`
+Check the scripts without executing them:
 
-Check the relevant `package.json`. The frontend and backend have separate script sections when they are separate apps.
+```bash
+bash -n script.sh
+bash -n manage.sh
+bash -n build.sh
+```
 
-### Port 5173 or 5000 is already in use
+### Missing package configuration
+
+Verify that the required package files exist:
+
+```bash
+ls -l package.json backend/package.json
+```
+
+### Port already in use
+
+Check whether ports 5173 or 5000 are occupied:
 
 ```bash
 sudo lsof -i :5173
 sudo lsof -i :5000
 ```
 
-Confirm which process owns the port before stopping it, or configure a different port.
+Verify the process before stopping it, or configure a different port.
 
-### `dev.sh` says `backend/package.json` is missing
+### Supabase connection errors
 
-The helper expects `backend/`. Create/configure that directory or update the script to match the actual backend path.
+Verify the Supabase URL, credentials, environment variable names, database configuration, and network connection.
 
-## Notes
+## 7. Important Notes
 
-- These scripts are local development/build helpers, not production deployment automation.
-- Database persistence, authentication, and email invitations work only if implemented and configured in the app.
-- Review shell scripts before running them, especially scripts obtained from external sources.
+- Run shell scripts from the project root unless the script specifies otherwise.
+- Ensure frontend and backend dependencies are installed before starting development.
+- Configure Supabase before using database-dependent functionality.
+- Frontend and backend environment variables must be configured separately.
+- These scripts automate local development and builds; they do not automatically deploy the application to production.
+- Confirm the actual commands supported by `manage.sh` before using the optional management commands listed above.
